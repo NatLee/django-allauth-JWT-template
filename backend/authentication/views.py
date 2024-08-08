@@ -23,16 +23,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from allauth.socialaccount.models import SocialAccount
-from django.contrib.auth import get_user_model
-from django.contrib.auth import logout
-
-User = get_user_model()
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        logout(request)
+        request.session.flush()
         return Response({'message': '登出成功'}, status=status.HTTP_200_OK)
 
 class SocialAccountListView(APIView):
