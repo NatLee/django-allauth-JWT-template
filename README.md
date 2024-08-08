@@ -61,6 +61,20 @@ This template is for those who want to use JWT for their frontend and backend.
     - JavaScript
         [./backend/dashboard/static/js/dashboard.js](./backend/dashboard/static/js/dashboard.js).
 
+- Frontend 3rd Party Login Routes
+
+    The routes are defined in `django-allauth` and you can find the main pattern in [./backend/authentication/urls.py](./backend/authentication/urls.py).
+
+    ```html
+    <!-- ./backend/dashboard/templates/index.html -->
+    <div id="loginButtons">
+        <a title="Google" href="/api/allauth/google/login/?process=login" class="social-login-btn">登入 Google</a>
+        <a title="Google" href="/api/allauth/google/login/?process=connect" class="social-login-btn">綁定 Google</a>
+        <a title="Microsoft" href="/api/allauth/microsoft/login/?process=login" class="social-login-btn">登入 Microsoft</a>
+        <a title="Microsoft" href="/api/allauth/microsoft/login/?process=connect" class="social-login-btn">綁定 Microsoft</a>
+    </div>
+    ```
+
 ## Misc
 
 I added a file named `./backend/templates/account/messages/logged_in.txt` to avoid login success message in `Admin` login panel.
