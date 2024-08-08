@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // 獲取頁面中的重要元素
     var socialLoginButtons = document.querySelectorAll('.social-login-btn');
     var loginStatus = document.getElementById('loginStatus');
     var socialAccounts = document.getElementById('socialAccounts');
@@ -6,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var sessionLogoutBtn = document.getElementById('sessionLogout');
     var jwtLogoutBtn = document.getElementById('jwtLogout');
 
+    // 更新登入狀態的函數
     function updateLoginStatus() {
         var accessToken = localStorage.getItem('access_token');
         if (accessToken) {
@@ -19,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // 獲取用戶綁定的社交帳號
     function fetchSocialAccounts() {
         fetch('/api/allauth/social/accounts', {
             headers: {
@@ -28,6 +31,11 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             let accountsHtml = '<h2>已綁定的社交帳號</h2>';
+            // 範例資料：
+            // data.social_accounts = [
+            //     { id: 1, provider: 'google', uid: '123456789' },
+            //     { id: 2, provider: 'microsoft', uid: '987654321' }
+            // ];
             data.social_accounts.forEach(account => {
                 accountsHtml += `
                     <div class="account-item">
@@ -39,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             socialAccounts.innerHTML = accountsHtml;
 
+            // 為每個解除綁定按鈕添加點擊事件
             document.querySelectorAll('.unbind-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     unbindSocialAccount(this.dataset.id);
@@ -48,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => console.error('Error:', error));
     }
 
+    // 解除綁定社交帳號
     function unbindSocialAccount(accountId) {
         fetch('/api/allauth/social/accounts', {
             method: 'DELETE',
@@ -61,12 +71,13 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data.message);
-            fetchSocialAccounts();
+            console.log(data.message); // 範例：'社交帳號解除綁定成功'
+            fetchSocialAccounts(); // 重新獲取社交帳號列表
         })
         .catch(error => console.error('Error:', error));
     }
 
+    // Session 登出
     sessionLogoutBtn.addEventListener('click', function() {
         fetch('/api/allauth/logout', {
             method: 'POST',
@@ -77,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data.message);
+            console.log(data.message); // 範例：'登出成功'
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
             updateLoginStatus();
@@ -85,20 +96,24 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => console.error('Error:', error));
     });
 
+    // JWT 登出（僅清除本地存儲的 token）
     jwtLogoutBtn.addEventListener('click', function() {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         updateLoginStatus();
     });
 
+    // 為每個社交登入按鈕添加點擊事件
     socialLoginButtons.forEach(function(button) {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             var url = this.href;
             localStorage.removeItem('loginStatus');
 
+            // 打開彈出窗口進行社交登入
             var popup = window.open(url, 'socialLogin', 'width=600,height=600');
 
+            // 檢查登入狀態
             var loginCheckInterval = setInterval(function() {
                 if (localStorage.getItem('loginStatus') === 'success') {
                     clearInterval(loginCheckInterval);
@@ -107,10 +122,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }, 1000);
             
+            // 處理登入成功
             function handleLoginSuccess() {
                 console.log('登入成功');
                 var accessToken = localStorage.getItem('access_token');
                 var refreshToken = localStorage.getItem('refresh_token');
+
+                // 範例 token：
+                // accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+                // refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
 
                 if (accessToken) {
                     console.log('Access token 已儲存');
@@ -125,5 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // 初始化：更新登入狀態
     updateLoginStatus();
 });
