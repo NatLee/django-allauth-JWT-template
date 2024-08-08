@@ -11,13 +11,36 @@
     <div class="container">
         <h1>社交帳號 Dashboard</h1>
         
+        <!-- 登入狀態將在這裡顯示 -->
         <div id="loginStatus">
-            <!-- 登入狀態將在這裡顯示 -->
+
+            <!-- Session 登入狀態 -->
+            <div id="sessionStatus">
+             {% if user.is_authenticated %}
+                <p>Session 登入狀態: <span id="sessionStatusText">🟩</span></p>
+            {% else %}
+                <p>Session 登入狀態: <span id="sessionStatusText">🟥</span></p>
+            {% endif %}
+            </div>
+
+            <!----------------------------->
+
+            <!-- JWT 登入狀態 -->
+            <div id="jwtStatus">
+                <p>JWT 登入狀態: <span id="jwtStatusText"></span></p>
+            </div>
+
         </div>
 
-        <div id="logoutButtons" style="display: none;">
-            <button id="sessionLogout" class="logout-btn">Session 登出</button>
-            <button id="jwtLogout" class="logout-btn">JWT 登出</button>
+        <div id="logoutButtons">
+
+            {% if user.is_authenticated %}
+                <!-- 使用者已使用 Session 登入才會出現 -->
+                <a href="/api/allauth/logout/" class="logout-btn" onclick="sessionLogout()">Session 登出</a>
+            {% endif %}
+
+            <!-- 使用者已使用 JWT 登入才會出現 -->
+            <button id="jwtLogoutBtn" class="logout-btn" onclick="jwtLogout()">JWT 登出</button>
         </div>
 
         <div id="loginButtons">
