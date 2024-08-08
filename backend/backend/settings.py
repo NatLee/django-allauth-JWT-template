@@ -59,9 +59,10 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    # Providers
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.microsoft',
-
+    'allauth.socialaccount.providers.line',
     # ========================
     # Local apps
     # ========================
@@ -156,17 +157,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # -------------- START - Allauth Setting --------------
-GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
-MS_CLIENT_ID = os.environ.get("MS_CLIENT_ID")
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
+SOCIALACCOUNT_PROVIDERS = {}
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
+MS_CLIENT_ID = os.environ.get("MS_CLIENT_ID", None)
+LINE_CLIENT_ID = os.environ.get("LINE_CLIENT_ID", None)
+
+if GOOGLE_CLIENT_ID:
+    SOCIALACCOUNT_PROVIDERS['google'] = {
         'APP': {
             'client_id': GOOGLE_CLIENT_ID,
             'secret': os.environ.get("GOOGLE_CLIENT_SECRET"),
             'key': ''
         }
-    },
-    "microsoft": {
+    }
+
+if MS_CLIENT_ID:
+    SOCIALACCOUNT_PROVIDERS['microsoft'] = {
         "APPS": [
             {
                 "client_id": MS_CLIENT_ID,
@@ -180,7 +186,16 @@ SOCIALACCOUNT_PROVIDERS = {
             }
         ]
     }
-}
+
+if LINE_CLIENT_ID:
+    SOCIALACCOUNT_PROVIDERS['line'] = {
+        'APP': {
+            'client_id': LINE_CLIENT_ID,
+            'secret': os.environ.get("LINE_CLIENT_SECRET"),
+        },
+        "SCOPE": ['profile', 'openid', 'email']
+    }
+
 SOCIALACCOUNT_LOGIN_ON_GET=True # Allow login via GET request
 ACCOUNT_LOGOUT_ON_GET=True # Allow logout via GET request
 SOCIALACCOUNT_AUTO_SIGNUP = True
