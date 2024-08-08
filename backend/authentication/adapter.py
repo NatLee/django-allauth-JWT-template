@@ -57,6 +57,13 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
 
         # 如果現在的process是connect，則不檢查 email
         if sociallogin.state.get('process') == 'connect':
+
+            # 沒有登入的用戶是不能綁定社交帳號的
+            if not request.user:
+                logger.warning(f'User not logged in when trying to connect social account: {social_account}')
+                # 直接重定向到錯誤頁面
+                raise ImmediateHttpResponse(redirect('connect-social-account-without-login'))
+
             # 檢查這個社交帳號是否已經綁定了其他帳號
             if existing_account != None:
                 if existing_account.user != sociallogin.user:
