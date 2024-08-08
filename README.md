@@ -63,7 +63,11 @@ This template is for those who want to use JWT for their frontend and backend.
 
 - Frontend 3rd Party Login Routes
 
+    In this template, I only use `Google`, `Microsoft`, and `Line` as the 3rd party login. You can check the provided in `INSTALLED_APPS` of [./backend/backend/settings.py](./backend/backend/settings.py).
+
     The routes are defined in `django-allauth` and you can find the main pattern in [./backend/authentication/urls.py](./backend/authentication/urls.py).
+
+    In the frontend, you can use the following code to login with 3rd party.
 
     ```html
     <!-- ./backend/dashboard/templates/index.html -->
@@ -72,6 +76,8 @@ This template is for those who want to use JWT for their frontend and backend.
         <a title="Google" href="/api/allauth/google/login/?process=connect" class="social-login-btn">綁定 Google</a>
         <a title="Microsoft" href="/api/allauth/microsoft/login/?process=login" class="social-login-btn">登入 Microsoft</a>
         <a title="Microsoft" href="/api/allauth/microsoft/login/?process=connect" class="social-login-btn">綁定 Microsoft</a>
+        <a title="Line" href="/api/allauth/line/login/?process=login" class="social-login-btn">登入 Line</a>
+        <a title="Line" href="/api/allauth/line/login/?process=connect" class="social-login-btn">綁定 Line</a>
     </div>
     ```
 
