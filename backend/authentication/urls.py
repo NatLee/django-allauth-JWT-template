@@ -2,7 +2,15 @@ from django.urls import path, include
 from authentication import views
 
 urlpatterns = [
+    # ===================
+    # Django Allauth
     path('', include('allauth.urls')),
+    # Provide Callback Route is like this:
+    # /api/allauth/google/login/callback/
+    # /api/allauth/microsoft/login/callback/
+    # ...
+    # ===================
+
 
     path('social/login/callback', views.social_login_callback, name='social-login-callback'),
     path('social/connect/callback', views.social_connect_callback, name='social-connect-callback'),
