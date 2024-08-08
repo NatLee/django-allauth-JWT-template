@@ -1,6 +1,8 @@
 
 */.env
 
+*.sqlite3
+
 desktop.ini
 .DS_Store
 
