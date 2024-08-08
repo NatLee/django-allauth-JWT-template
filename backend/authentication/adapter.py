@@ -59,8 +59,9 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         if sociallogin.state.get('process') == 'connect':
 
             # 沒有登入的用戶是不能綁定社交帳號的
-            if not request.user:
-                logger.warning(f'User not logged in when trying to connect social account: {social_account}')
+            # 判斷是否為匿名用戶
+            if not request.user.is_authenticated:
+                logger.warning('Anonymous user trying to connect social account without login')
                 # 直接重定向到錯誤頁面
                 raise ImmediateHttpResponse(redirect('connect-social-account-without-login'))
 
