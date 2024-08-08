@@ -27,11 +27,11 @@ This template is for those who want to use JWT for their frontend and backend.
 3. Migrate and run server.
 
     ```bash
-    python manage.py migrate
+    cd backend && python manage.py migrate
     ```
 
     ```bash
-    python manage.py runserver 0.0.0.0:5566
+    cd backend && python manage.py runserver 0.0.0.0:5566
     ```
 
 4. Visit `http://localhost:5566`.
