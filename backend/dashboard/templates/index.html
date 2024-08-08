@@ -50,6 +50,15 @@
             <a title="Microsoft" href="/api/allauth/microsoft/login/?process=connect" class="social-login-btn">綁定 Microsoft</a>
         </div>
 
+        <div id="loginNotice">
+            <p>📌 注意事項</p>
+            <ul>
+                <li>🔒 第三方登入會自動登入Session及置入JWT至Local Storage。</li>
+                <li>🔒 第三方登入需要重新整理才能看到Session登入狀態。</li>
+                <li>🔒 只有Session登入的狀態才能綁定第三方登入。</li>
+            </ul>
+        </div>
+
         <div id="socialAccounts">
             <!-- 已綁定的社交帳號列表將在這裡顯示 -->
         </div>

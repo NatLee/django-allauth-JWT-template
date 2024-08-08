@@ -113,6 +113,17 @@ h1 {
     font-weight: bold;
 }
 
+#loginNotice {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    font-weight: bold;
+    background-color: rgba(255,255,255,0.8);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+
 #loginButtons, #logoutButtons {
     display: flex;
     justify-content: center;
