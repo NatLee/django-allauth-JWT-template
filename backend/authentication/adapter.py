@@ -4,6 +4,7 @@ from django.urls import reverse
 from urllib.parse import urlencode
 import json
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from allauth.account.utils import user_email
 from allauth.socialaccount.models import SocialAccount
@@ -43,17 +44,29 @@ class MyAccountAdapter(DefaultAccountAdapter):
 class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
 
+        # ========================================
+        # 初始化：取得第三方帳號的實例
+        # ========================================
+
         social_account = sociallogin.account
         try:
             # 檢查這個社交帳號是否已經綁定了其他帳號
             existing_account = SocialAccount.objects.get(provider=social_account.provider, uid=social_account.uid)
         except SocialAccount.DoesNotExist:
-            # 如果社交帳號不存在，繼續檢查 email 是否重複
+            # 如果社交帳號不存在，則繼續往下檢查
             existing_account = None
+
+        # ========================================
+        # 檢查狀態：login
+        # ========================================
 
         if sociallogin.state.get('process') == 'login' and existing_account:
             # 如果找到現有的社交帳號，直接返回，允許登入
             return super().pre_social_login(request, sociallogin)
+
+        # ========================================
+        # 檢查狀態：connect
+        # ========================================
 
         # 如果現在的process是connect，則不檢查 email
         if sociallogin.state.get('process') == 'connect':
@@ -78,15 +91,25 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
 
             return super().pre_social_login(request, sociallogin)
 
-        # 檢查 email 是否重複
+        # ========================================
+        # 檢查 Email 是否重複
+        # ========================================
         email = user_email(sociallogin.user)
         if email:
             User = get_user_model()
+            # 檢查 email 是否已經存在
             if User.objects.filter(email=email).exists():
                 # Email 已經存在
                 logger.warning(f"Duplicate email detected during social login: {email}")
                 # 直接重定向到錯誤頁面
                 raise ImmediateHttpResponse(redirect('duplicate-email'))
+            # Email 不存在，則檢查是否為有效的 email domain
+            email_domain = email.split('@')[1]
+            if email_domain not in settings.SOCIALACCOUNT_VALID_EMAIL_DOMAINS:
+                # Email domain 不在白名單中
+                logger.warning(f"Invalid email domain detected during social login: {email}")
+                # 直接重定向到錯誤頁面
+                raise ImmediateHttpResponse(redirect('invalid-email-domain'))
 
         return super().pre_social_login(request, sociallogin)
 

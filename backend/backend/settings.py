@@ -204,6 +204,15 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_ADAPTER = 'authentication.adapter.MyAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'authentication.adapter.MySocialAccountAdapter'
 
+# ========================
+# Custom Allauth settings
+# ========================
+SOCIALACCOUNT_VALID_EMAIL_DOMAINS = [
+    'gmail.com',
+    'hotmail.com',
+]
+
+
 # --------------- END - Allauth Setting ----------------
 
 

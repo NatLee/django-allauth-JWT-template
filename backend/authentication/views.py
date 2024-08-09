@@ -18,6 +18,9 @@ def social_account_already_connected_by_self(request):
 def connect_social_account_without_login(request):
     return render(request, 'exceptions/connect_social_account_without_login.html')
 
+def invalid_email_domain(request):
+    return render(request, 'exceptions/invalid_email_domain.html')
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
